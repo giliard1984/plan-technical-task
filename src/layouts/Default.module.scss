@@ -1,0 +1,49 @@
+.myInput :global(.ant-input) {
+  background-color: #0f2941;
+  color: #fff;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  align-items: center;
+  height: 120px;
+  background-color: #253545;
+  color: #fff;
+}
+
+.headerText {
+  text-align: left;
+  padding-left: 40px;
+  font-size: 18px;
+}
+
+.input {
+  text-align: left;
+  background-color: #0c263e;
+  height: 39px;
+}
+
+.content {
+  padding: 48px 0px;
+  min-height: 100dvh;
+}
+
+.outletWrapper {
+  padding: 24px;
+  background-color: #fff;
+  max-width: 1280px;
+  min-height: 90dvh;
+  margin: 0 auto;
+}
+
+.imageWrapper {
+  text-align: left;
+  display: flex;
+}
+
+img {
+  width: 100%;
+}
