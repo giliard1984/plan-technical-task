@@ -128,6 +128,9 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
                 // onChange={onChange}
                 value={currentTime[0] * 60 + currentTime[1]}
                 step={0.01}
+                tooltip={{
+                  formatter: () => `${String(currentTime[0]).padStart(2, "0")}:${String(currentTime[1]).padStart(2, "0")}`
+                }}
               />
             </Col>
           </Row>
