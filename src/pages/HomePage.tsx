@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AppContext } from "@contexts/AppContext";
 
 const HomePage: React.FC = () => {
+  // retrieved states and methods associated with the app context
+  const {
+    loading,
+    error,
+    filteredVideosList
+  } = useContext(AppContext);
+
   return (
     <>
-      Initial page....
+      {loading && <div>Loading...</div>}
+      {error && <div>{JSON.stringify(error)}</div>}
+      {filteredVideosList && JSON.stringify(filteredVideosList)}
     </>
   );
 };
