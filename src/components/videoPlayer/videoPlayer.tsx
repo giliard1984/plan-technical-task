@@ -73,6 +73,11 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
     return () => clearInterval(interval);
   }, [isPlaying]);
 
+  // function responsible for handling the user's track bar click
+  const handleOnTrack = (value: number) => {
+    refVideoPlayer.current.currentTime = value;
+  };
+
   return (
     <>
       { !isPlaying &&
@@ -125,8 +130,8 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
               <Slider
                 min={0}
                 max={duration[0] * 60 + duration[1]}
-                // onChange={onChange}
                 value={currentTime[0] * 60 + currentTime[1]}
+                onChange={(value) => handleOnTrack(value)}
                 step={0.01}
                 tooltip={{
                   formatter: () => `${String(currentTime[0]).padStart(2, "0")}:${String(currentTime[1]).padStart(2, "0")}`
