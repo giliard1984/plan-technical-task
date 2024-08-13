@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-export const useDebounce = (value: any, delay = 500) => {
-  const [debouncedValue, setDebouncedValue] = useState("");
+export const useDebounce = <T,>(value: T, delay = 500) => {
+  const [debouncedValue, setDebouncedValue] = useState<T>();
   const timerRef: any = useRef();
 
   useEffect(() => {

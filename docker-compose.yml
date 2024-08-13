@@ -1,0 +1,25 @@
+version: "4.0"
+
+services:
+  plan-frontend-service:
+    container_name: "plan-frontend-service"
+    hostname: "plan-frontend-service"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    ports:
+      - 5180:5180
+      - 5181:5181
+    networks:
+      - plan-network
+    volumes:
+      - ./:/opt/app
+      - node_modules:/usr/src/app/node_modules
+
+volumes:
+  node_modules:
+
+networks:
+  plan-network:
+    driver: bridge

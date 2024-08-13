@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import VideosList from "@components/videosList/VideosList";
 import { AppContext } from "@contexts/AppContext";
 
 const HomePage: React.FC = () => {
@@ -13,7 +14,7 @@ const HomePage: React.FC = () => {
     <>
       {loading && <div>Loading...</div>}
       {error && <div>{JSON.stringify(error)}</div>}
-      {filteredVideosList && JSON.stringify(filteredVideosList)}
+      {filteredVideosList && <VideosList data={filteredVideosList} />}
     </>
   );
 };

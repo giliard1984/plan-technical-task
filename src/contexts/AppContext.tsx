@@ -22,7 +22,7 @@ const AppProvider = ({ children }: any) => {
   const [filteredVideosList, setFilteredVideosList] = useState<Video[]>();
 
   // debouce hook based on the searchValue state (search input)
-  const debouncedValue = useDebounce(searchValue, 500);
+  const debouncedValue = useDebounce<string>(searchValue, 500);
 
   // as soon as the component mounts, the videos list should be fetched
   const {
