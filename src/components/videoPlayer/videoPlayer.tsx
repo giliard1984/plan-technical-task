@@ -2,6 +2,9 @@ import React, { useRef, useEffect, useState } from "react";
 import { ConfigProvider, Row, Col, Slider } from "antd";
 import { SoundOutlined, MutedOutlined } from "@ant-design/icons";
 import { slugify } from "@helpers/slugify";
+import { secondsToMinutes } from "@helpers/secondsToMinutes";
+
+import styles from "./videoPlayer.module.scss";
 
 interface Props {
   isPlaying?: boolean
@@ -10,16 +13,6 @@ interface Props {
   url: string
   trackedInformation?: (data: any) => void
 }
-
-// Note: I copied this function from the internet as it made sense to reuse here
-const sec2Min = (sec: any) => {
-  const min = Math.floor(sec / 60);
-  const secRemain = Math.floor(sec % 60);
-  return {
-    min: min,
-    sec: secRemain,
-  };
-};
 
 const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, trackedInformation }) => {
   const refVideoPlayer = useRef(null);
@@ -49,12 +42,12 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
     playOrPause();
 
     //
-    const { min, sec } = sec2Min(refVideoPlayer.current.duration);
+    const { min, sec } = secondsToMinutes(refVideoPlayer.current.duration);
     // setDurationSec(videoRef.current.duration);
     setDuration([min, sec]);
 
     const interval = setInterval(() => {
-      const { min, sec } = sec2Min(refVideoPlayer.current.currentTime);
+      const { min, sec } = secondsToMinutes(refVideoPlayer.current.currentTime);
       isPlaying && setCurrentTime([min, sec]);
       isPlaying && trackedInformation && trackedInformation([min, sec]);
     }, 1000);
@@ -62,13 +55,14 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
     return () => clearInterval(interval);
   }, [isPlaying]);
 
-  // function responsible for handling the user's track bar click
+  // function responsible for handling the user's track-bar click
   const handleOnTrack = (value: number) => {
     refVideoPlayer.current.currentTime = value;
   };
 
   return (
     <>
+      {/* Themes related to this component */}
       <ConfigProvider
         theme={{ components: { Slider: {
           controlSize: 7,
@@ -79,14 +73,7 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
           trackHoverBg: "rgba(255, 255, 255, 0.9)"
         } } }}
       >
-        { !isPlaying &&
-          <img src={poster} style={{
-            zIndex: 3,
-            position: "absolute",
-            minHeight: "330px",
-            minWidth: "calc(100% + 2px)"
-          }} />
-        }
+        { !isPlaying && <img src={poster} className={styles.poster} /> }
         <video
           id={videoId}
           ref={refVideoPlayer}
@@ -103,23 +90,12 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
         { isPlaying &&
           <div
             id="video-playback-control"
-            style={{
-              zIndex: 2,
-              position: "absolute",
-              top: "269px",
-              backgroundImage: "linear-gradient(to bottom, rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.5))",
-              borderRadius: 0,
-              color: "#fff",
-              fontWeight: "500",
-              width: "calc(100% + 1px)",
-              padding: "5px 10px",
-              height: "60px"
-            }}
+            className={styles.playbackControl}
           >
             <Row>
               <Col
                 span={22}
-                style={{ textAlign: "left", fontSize: 12 }}
+                className={styles.duration}
               >
                 {`${String(currentTime[0]).padStart(2, "0")}:${String(currentTime[1]).padStart(2, "0")} / ${duration[0]}:${duration[1]}`}
               </Col>

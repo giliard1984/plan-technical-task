@@ -54,7 +54,12 @@ const VideoCard: React.FC<Props> = ({ data }) => {
         description={
           <>
             <div style={{ minHeight: "35px" }}>
-              <Row justify="start" align="middle" style={{ marginTop: 10 }} gutter={[30, 16]}>
+              <Row
+                justify="start"
+                align="middle"
+                style={{ marginTop: 10 }}
+                gutter={[30, 16]}
+              >
                 <Col span={3}>
                   <Avatar shape="square" size={35} icon={<UserOutlined />} />
                 </Col>

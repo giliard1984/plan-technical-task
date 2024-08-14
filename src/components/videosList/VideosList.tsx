@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, /* Typography, */ } from "antd";
+import { Row, Col } from "antd";
 import VideoCard from "../videoCard/VideoCard";
 import { motion } from "framer-motion";
 import type { Video } from "@definitions/global";
@@ -16,11 +16,6 @@ const VideosList: React.FC<Props> = ({ data }) => {
         justify="start"
         align="middle"
       >
-        {/* <Col span={24} style={{ textAlign: "left" }}>
-          <Typography.Title level={2}>
-            List of Movies
-          </Typography.Title>
-        </Col> */}
         {data?.map((video: Video, index: number) => {
           return (
             <Col key={`video-${video?.id}`} span={8}>

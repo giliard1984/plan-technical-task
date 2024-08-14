@@ -1,0 +1,24 @@
+.poster {
+  z-index: 3;
+  position: absolute;
+  min-height: 330px;
+  min-width: calc(100% + 2px);
+}
+
+.playbackControl {
+  z-index: 2;
+  position: absolute;
+  top: 269px;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.5));
+  border-radius: 0;
+  color: #fff;
+  font-weight: 500;
+  width: calc(100% + 1px);
+  padding: 5px 10px;
+  height: 60px;
+}
+
+.duration {
+  text-align: left;
+  font-size: 12px;
+}
