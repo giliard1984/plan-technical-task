@@ -8,7 +8,7 @@ For the frontend:
 * Typescript
 * Antd (https://ant.design/components/overview)
 * Custom Hook to fetch data (useFetch), which is leveraging the generics typescript concept to accept and ensure its types
-* Custom Hooke to debounce some actions, such as filtering the list and/or start playing the video
+* Custom Hook to debounce some actions, such as filtering the list and/or start playing the video
 * ContextAPI is here to help us abstract and reuse some states across the application where necessary
 * Making use of the Outlet (react-router-dom), so the component can be wrapper in a layout (Basically, a High-Order component, where a function takes a component and returns a new component).
 * JSON Server mocking RestFul API, so we can make calls to the endpoints (https://www.npmjs.com/package/json-server). It allows, developers to mock data and make calls to the endpoints as they were reaching the backend.
@@ -27,6 +27,7 @@ If setting up through the docker container, you will need the docker configured 
   * JSON Server: http://localhost:5181/
  
  Note: I was thinking on making the calls straight to gist.githubusercontent.com repository, but I came across some CORS issues, and decided to go with JSON server.
+ Note: I understand the task asked to add an avatar (circle), but I used a squared one to fit the design.
 
  ![image](https://github.com/user-attachments/assets/05feb554-0cbf-4047-b602-41dc276dc6bb)
 
