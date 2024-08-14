@@ -11,6 +11,7 @@ interface Props {
   trackedInformation?: (data: any) => void
 }
 
+// Note: I copied this function from the internet as it made sense to reuse here
 const sec2Min = (sec: any) => {
   const min = Math.floor(sec / 60);
   const secRemain = Math.floor(sec % 60);
