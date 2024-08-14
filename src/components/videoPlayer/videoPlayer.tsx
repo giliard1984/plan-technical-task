@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Row, Col, Slider } from "antd";
+import { ConfigProvider, Row, Col, Slider } from "antd";
+import { SoundOutlined, MutedOutlined } from "@ant-design/icons";
 import { slugify } from "@helpers/slugify";
 
 interface Props {
@@ -23,13 +24,9 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
   const refVideoPlayer = useRef(null);
   const videoId = `video-${slugify(title)}`;
 
+  const [isMuted, setIsMuted] = useState(true);
   const [currentTime, setCurrentTime] = useState([0, 0]); // current time of the video in array. The first value represents the minute and the second represents seconds.
-  // const [currentTimeSec, setCurrentTimeSec] = useState(); //current time of the video in seconds
   const [duration, setDuration] = useState([0, 0]); // // total duration of the video in the array. The first value represents the minute and the second represents seconds.
-  // const [durationSec, setDurationSec] = useState(); // // current duration of the video in seconds
-
-  // console.log(refVideoPlayer?.current?.duration);
-  // console.log(refVideoPlayer?.current?.currentTime);
 
   const playOrPause = () => {
     if (refVideoPlayer?.current.paused) {
@@ -39,22 +36,13 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
     }
   };
 
-  isPlaying && console.log("currentTime: ", currentTime);
-
-  // TODO: Understand how to solve the requestFullScreen permission without using an iFrame
-  // const fullScreen = () => {
-  //   if (!refVideoPlayer?.current.fullscreenElement) {
-  //     if (refVideoPlayer?.current.requestFullscreen) {
-  //       refVideoPlayer?.current.requestFullscreen();
-  //     } else if (refVideoPlayer?.current.webkitRequestFullscreen) { /* Safari */
-  //       refVideoPlayer?.current.webkitRequestFullscreen();
-  //     } else if (refVideoPlayer?.current.msRequestFullscreen) { /* IE11 */
-  //       refVideoPlayer?.current.msRequestFullscreen();
-  //     }
-  //   } else if (document.exitFullscreen) {
-  //     document.exitFullscreen();
-  //   }
-  // };
+  const muteOrUnmute = () => {
+    if (refVideoPlayer?.current.muted) {
+      refVideoPlayer?.current && setIsMuted(!refVideoPlayer.current.muted);
+    } else {
+      refVideoPlayer?.current && setIsMuted(!refVideoPlayer.current.muted);
+    }
+  };
 
   useEffect(() => {
     playOrPause();
@@ -80,67 +68,82 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
 
   return (
     <>
-      { !isPlaying &&
-        <img src={poster} style={{
-          zIndex: 3,
-          position: "absolute",
-          minHeight: "330px",
-          minWidth: "calc(100% + 2px)"
-        }} />
-      }
-      <video
-        id={videoId}
-        ref={refVideoPlayer}
-        controls={false}
-        muted
-        autoPlay={isPlaying}
-        poster={poster}
-        // autoPictureInPicture={true}
-        preload="metadata"
+      <ConfigProvider
+        theme={{ components: { Slider: {
+          controlSize: 7,
+          dotSize: 2,
+          dotBorderColor: "#fff",
+          railBg: "rgba(0, 0, 0, 0.1)",
+          trackBg: "rgba(255, 255, 255, 0.7)",
+          trackHoverBg: "rgba(255, 255, 255, 0.9)"
+        } } }}
       >
-        <source src={url} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      { isPlaying &&
-        <div
-          id="video-playback-control"
-          style={{
-            zIndex: 2,
+        { !isPlaying &&
+          <img src={poster} style={{
+            zIndex: 3,
             position: "absolute",
-            top: "268px",
-            background: "rgba(0, 0, 0, 0.03)",
-            borderRadius: 0,
-            color: "#fff",
-            fontWeight: "bold",
-            width: "calc(100% + 1px)",
-            padding: "2px 0px"
-            // minHeight: "25px"
-          }}
+            minHeight: "330px",
+            minWidth: "calc(100% + 2px)"
+          }} />
+        }
+        <video
+          id={videoId}
+          ref={refVideoPlayer}
+          controls={false}
+          muted={isMuted}
+          autoPlay={isPlaying}
+          poster={poster}
+          // autoPictureInPicture={true}
+          preload="metadata"
         >
-          <Row>
-            <Col span={2}></Col>
-            <Col span={2}></Col>
-            <Col
-              span={20}
-              style={{ textAlign: "right", paddingRight: 5, fontSize: 11 }}
-            >
-              {`${String(currentTime[0]).padStart(2, "0")}:${String(currentTime[1]).padStart(2, "0")} / ${duration[0]}:${duration[1]}`}
-            </Col>
-            <Col span={24} style={{ padding: "0px 10px" }}>
-              <Slider
-                min={0}
-                max={duration[0] * 60 + duration[1]}
-                value={currentTime[0] * 60 + currentTime[1]}
-                onChange={(value) => handleOnTrack(value)}
-                step={0.01}
-                tooltip={{
-                  formatter: () => `${String(currentTime[0]).padStart(2, "0")}:${String(currentTime[1]).padStart(2, "0")}`
-                }}
-              />
-            </Col>
-          </Row>
-        </div>
-      }
+          <source src={url} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        { isPlaying &&
+          <div
+            id="video-playback-control"
+            style={{
+              zIndex: 2,
+              position: "absolute",
+              top: "269px",
+              backgroundImage: "linear-gradient(to bottom, rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.5))",
+              borderRadius: 0,
+              color: "#fff",
+              fontWeight: "500",
+              width: "calc(100% + 1px)",
+              padding: "5px 10px",
+              height: "60px"
+            }}
+          >
+            <Row>
+              <Col
+                span={22}
+                style={{ textAlign: "left", fontSize: 12 }}
+              >
+                {`${String(currentTime[0]).padStart(2, "0")}:${String(currentTime[1]).padStart(2, "0")} / ${duration[0]}:${duration[1]}`}
+              </Col>
+              <Col span={2}>
+                {isMuted ?
+                  <MutedOutlined onClick={() => muteOrUnmute()} /> :
+                  <SoundOutlined onClick={() => muteOrUnmute()} />
+                }
+              </Col>
+              <Col span={24}>
+                <Slider
+                  min={0}
+                  max={duration[0] * 60 + duration[1]}
+                  value={currentTime[0] * 60 + currentTime[1]}
+                  onChange={(value) => handleOnTrack(value)}
+                  step={0.01}
+                  tooltip={{
+                    formatter: () => `${String(currentTime[0]).padStart(2, "0")}:${String(currentTime[1]).padStart(2, "0")}`
+                  }}
+                />
+              </Col>
+            </Row>
+          </div>
+        }
+      </ConfigProvider>
     </>
   );
 };
