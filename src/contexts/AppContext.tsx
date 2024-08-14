@@ -11,17 +11,24 @@ const AppContextValue = {
   error: null as Error | null,
   videosList: [] as Video[] | undefined,
   filteredVideosList: [] as Video[] | undefined,
+  isInteractive: true,
   searchValue: "",
+  setIsInteractive: (_value: boolean) => {},
   setSearchValue: (_value: string) => {},
  };
 
+type Props = {
+  children: string | JSX.Element | JSX.Element[]
+}
+
 const AppContext = createContext(AppContextValue);
 
-const AppProvider = ({ children }: any) => {
+const AppProvider = ({ children }: Props) => {
+  const [isInteractive, setIsInteractive] = useState(true);
   const [searchValue, setSearchValue] = useState(""); // state that keeps the typed information (input)
   const [filteredVideosList, setFilteredVideosList] = useState<Video[]>();
 
-  // debouce hook based on the searchValue state (search input)
+  // debounce hook based on the searchValue state (search input)
   const debouncedValue = useDebounce<string>(searchValue, 500);
 
   // as soon as the component mounts, the videos list should be fetched
@@ -50,7 +57,9 @@ const AppProvider = ({ children }: any) => {
         error,
         videosList,
         searchValue,
+        isInteractive,
         filteredVideosList,
+        setIsInteractive,
         setSearchValue
       }}
     >

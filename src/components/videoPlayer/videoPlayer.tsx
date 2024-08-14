@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { ConfigProvider, Row, Col, Slider } from "antd";
 import { SoundOutlined, MutedOutlined } from "@ant-design/icons";
 import { slugify } from "@helpers/slugify";
 import { secondsToMinutes } from "@helpers/secondsToMinutes";
+import { AppContext } from "@contexts/AppContext";
 
 import styles from "./videoPlayer.module.scss";
 
@@ -11,10 +12,22 @@ interface Props {
   title: string
   poster?: string
   url: string
-  trackedInformation?: (data: any) => void
+  onVideoStart?: (data: Event, interactive?: boolean) => void
+  onVideoEnd?: (data: Event, interactive?: boolean) => void
+  onVideoResume?: (data: Event, interactive?: boolean) => void
+  onVideoSeek?: (data: Event, interactive?: boolean) => void
 }
 
-const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, trackedInformation }) => {
+const VideoPlayer: React.FC<Props> = ({
+  isPlaying = false,
+  title,
+  poster,
+  url,
+  onVideoStart,
+  onVideoEnd,
+  onVideoResume,
+  onVideoSeek
+}) => {
   const refVideoPlayer = useRef(null);
   const videoId = `video-${slugify(title)}`;
 
@@ -22,8 +35,36 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
   const [currentTime, setCurrentTime] = useState([0, 0]); // current time of the video in array. The first value represents the minute and the second represents seconds.
   const [duration, setDuration] = useState([0, 0]); // // total duration of the video in the array. The first value represents the minute and the second represents seconds.
 
+  // retrieved states and methods associated with the app context
+  const {
+    isInteractive
+  } = useContext(AppContext);
+
+  // adds the event listeners, so a callback is triggered when an action is in place
+  useEffect(() => {
+    const onPlayOrResume = (event: Event) => {
+      if (!refVideoPlayer.current.currentTime && onVideoStart) {
+        onVideoStart(event, isInteractive);
+       } else if (onVideoResume) {
+        onVideoResume(event, isInteractive);
+       }
+    };
+
+    if (refVideoPlayer?.current) {
+      refVideoPlayer?.current?.addEventListener("play", onPlayOrResume);
+      refVideoPlayer?.current?.addEventListener("ended", (e: Event) => onVideoEnd(e, isInteractive));
+      refVideoPlayer?.current?.addEventListener("seeked", (e: Event) => onVideoSeek(e, isInteractive));
+    }
+
+    return () => {
+      refVideoPlayer?.current?.removeEventListener("play", onPlayOrResume);
+      refVideoPlayer?.current?.removeEventListener("ended", (e: Event) => onVideoEnd(e, isInteractive));
+      refVideoPlayer?.current?.removeEventListener("seeked", (e: Event) => onVideoSeek(e, isInteractive));
+    }
+  }, [isInteractive]);
+
   const playOrPause = () => {
-    if (refVideoPlayer?.current.paused) {
+    if (isPlaying && refVideoPlayer?.current.paused) {
       refVideoPlayer?.current && refVideoPlayer.current.play();
     } else {
       refVideoPlayer?.current && refVideoPlayer.current.pause();
@@ -41,17 +82,17 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
   useEffect(() => {
     playOrPause();
 
-    //
+    // function that converts the duration into minutes and seconds, to be used by the related state
     const { min, sec } = secondsToMinutes(refVideoPlayer.current.duration);
-    // setDurationSec(videoRef.current.duration);
     setDuration([min, sec]);
 
+    // track the current time changes, so the information gets synchronised
     const interval = setInterval(() => {
       const { min, sec } = secondsToMinutes(refVideoPlayer.current.currentTime);
       isPlaying && setCurrentTime([min, sec]);
-      isPlaying && trackedInformation && trackedInformation([min, sec]);
     }, 1000);
 
+    // cleanup
     return () => clearInterval(interval);
   }, [isPlaying]);
 
@@ -78,6 +119,7 @@ const VideoPlayer: React.FC<Props> = ({ isPlaying = false, title, poster, url, t
           id={videoId}
           ref={refVideoPlayer}
           controls={false}
+          loop={false}
           muted={isMuted}
           autoPlay={isPlaying}
           poster={poster}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "antd";
-import VideoCard from "../videoCard/VideoCard";
+import VideoCard from "@components/videoCard/VideoCard";
 import { motion } from "framer-motion";
 import type { Video } from "@definitions/global";
 

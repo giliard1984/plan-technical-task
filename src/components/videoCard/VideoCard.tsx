@@ -5,6 +5,7 @@ import clsx from "clsx";
 import type { Video } from "@definitions/global";
 import VideoPlayer from "@components/videoPlayer/videoPlayer";
 import { useDebounce } from "@hooks/useDebounce";
+import { onVideoStart, onVideoEnd, onVideoResume, onVideoSeek } from "@helpers/videoEvents";
 
 const { Meta } = Card;
 const { Paragraph } = Typography;
@@ -28,10 +29,6 @@ const VideoCard: React.FC<Props> = ({ data }) => {
   // debouce hook based on the searchValue state (search input)
   const debouncedIsPlaying = useDebounce(isPlaying, 500);
 
-  const trackedInformation = (data: any): void => {
-    isPlaying && console.log(data);
-  };
-
   return (
     <Card
       hoverable
@@ -42,7 +39,10 @@ const VideoCard: React.FC<Props> = ({ data }) => {
           title={data.title}
           poster={data.thumbnailUrl}
           url={data.videoUrl}
-          trackedInformation={trackedInformation}
+          onVideoStart={onVideoStart}
+          onVideoEnd={onVideoEnd}
+          onVideoResume={onVideoResume}
+          onVideoSeek={onVideoSeek}
         />
       }
       onMouseOver={() => setIsPlaying(true)}
