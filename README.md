@@ -32,7 +32,7 @@ If setting up through the docker container, you will need the docker configured 
 
  ![image](https://github.com/user-attachments/assets/990c4379-a53e-4f11-aadc-eb1de67103bc)
 
-
+ 
 If, you decide to start the project outside the container, please guarantee you have node 20+ installed on your machine.
 * Run `yarn install`
 * Run `yarn run dev`
@@ -45,6 +45,8 @@ If, you decide to start the project outside the container, please guarantee you 
 ![image](https://github.com/user-attachments/assets/199aa30d-5151-4212-9818-1f858ed6f229)
 
 ![image](https://github.com/user-attachments/assets/ec185e1f-8563-47c4-8888-ca2a26d7ef40)
+
+![image](https://github.com/user-attachments/assets/b43c9564-de20-4efd-b70a-0b45b71504b3)
 
 
 ## Extras
